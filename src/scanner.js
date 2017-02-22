@@ -1,6 +1,12 @@
 const TokenType = require("./tokentype");
 const Token = require("./token");
 
+const keywords = {};
+
+for (const it of ["and", "class", "else", "false", "for", "fun", "if", "nil", "or", "print", "return", "super", "this", "true", "var", "while"]) {
+	keywords[it] = TokenType[it.toUpperCase()];
+}
+
 class Scanner {
 
 	constructor(lox, source) {
@@ -84,16 +90,97 @@ class Scanner {
 
 		// Keyword
 		const text = this.source.substring(this.start, this.currrent);
-		const type = Scanner.keywords[text] || TokenType.IDENTIFIER;
+		const type = keywords[text] || TokenType.IDENTIFIER;
 		this.addToken(type);
 	}
 
-}
+	// Number
+	number() {
+		while (this.isDigit(this.peek())) this.advance();
 
-Scanner.keywords = {};
+		// Look for a fractional part
+		if (this.peek() == "." && this.isDigit(this.peekNext())) {
+			// Consume the ".""
+			this.advance();
 
-for (const it of ["and", "class", "else", "false", "for", "fun", "if", "nil", "or", "print", "return", "super", "this", "true", "var", "while"]) {
-	Scanner.keywords[it] = TokenType[it.toUpperCase()];
+			while (this.isDigit(this.peek())) this.advance();
+		}
+
+		this.addToken(TokenType.NUMBER, parseFloat(this.source.substring(this.start, this.current)));
+	}
+
+	// String
+	string() {
+		while (this.peek() != "\"" && !this.isAtEnd()) {
+			if (this.peek() == "\n") this.line++;
+			this.advance();
+		}
+
+		// Unterminated string
+		if (this.isAtEnd()) {
+			this.lox.error(this.line, "Unterminated string.");
+			return;
+		}
+
+		// The closing "
+		this.advance();
+
+		// Trim the surrounding quotes
+		const value = this.source.substring(this.start + 1, this.current - 1);
+		this.addToken(TokenType.STRING, value);
+	}
+
+	// match
+	match(expected) {
+		if (this.isAtEnd()) return false;
+		if (this.source.charAt(this.current) != expected) return false;
+
+		this.current++;
+		return true;
+	}
+
+	// peek
+	peek() {
+		if (this.current >= this.source.length()) return "\0";
+		return this.source.charAt(this.current);
+	}
+
+	// peek-next
+	peekNext() {
+		if (current + 1 >= this.source.length()) return "\0";
+		return this.source.charAt(this.current + 1);
+	}
+
+	// is-alpha
+	isAlpha(c) {
+		return c.length == 1 && c.match(/[a-z_]/i);
+	}
+
+	isAlphaNumeric(c) {
+		return isAlpha(c) || isDigit(c);
+	}
+
+	// is-digit
+	isDigit(c) {
+		return c.length == 1 && c.match(/[0-9]/i);
+	}
+
+	// is-at-end
+	isAtEnd() {
+		return this.current >= this.souce.length();
+	}
+
+	// advance-and-add-token
+	advance() {
+		this.current++;
+		return this.source.charAt(this.current - 1);
+	}
+
+	addToken(type, literal) {
+		const text = this.source.substring(this.start, this.current);
+		this.tokens.push(new Token(type, text, literal, this.line));
+	}
+
 }
 
 module.exports = Scanner;
