@@ -1,5 +1,6 @@
 const TokenType = require("./tokentype");
 const Expr = require("./expr");
+const Stmt = require("./stmt");
 
 const synchronizing = [
 	TokenType.LEFT_BRACE,
@@ -20,7 +21,7 @@ class Parser {
 		const statements = [];
 		while (!this.isAtEnd()) {
 			statements.pus
-			h(this.declaration());
+			statements.push(this.declaration());
 		}
 		return statements;
 	}

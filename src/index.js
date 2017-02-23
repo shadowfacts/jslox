@@ -46,7 +46,7 @@ class Lox {
 
 		if (this.hadError) return;
 
-		const resolver = new Resolver();
+		const resolver = new Resolver(this);
 		const locals = resolver.resolve(statements);
 
 		if (this.hadError) return;
