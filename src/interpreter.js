@@ -204,7 +204,7 @@ class Interpreter {
 			throw new RuntimeError(expr.paren, "Can only call functions and classes.");
 		}
 
-		if (args.length < callee.requiredArguments) {
+		if (args.length < callee.getRequiredArguments()) {
 			throw new RuntimeError(expr.paren, "Not enough arguments.");
 		}
 
