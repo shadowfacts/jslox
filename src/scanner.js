@@ -89,7 +89,7 @@ class Scanner {
 		while (this.isAlphaNumeric(this.peek())) this.advance();
 
 		// Keyword
-		const text = this.source.substring(this.start, this.currrent);
+		const text = this.source.substring(this.start, this.current);
 		const type = keywords[text] || TokenType.IDENTIFIER;
 		this.addToken(type);
 	}
