@@ -29,18 +29,18 @@ class Lox {
 		rl.setPrompt("> ");
 		rl.prompt();
 		rl.on("line", (line) => {
-			run(line);
+			this.run(line);
 			this.hadError = false;
 			this.hadRuntimeError = false;
 			rl.prompt();
 		});
 	}
 
-	run(scanner) {
+	run(source) {
 		const scanner = new Scanner(this, source);
 		const tokens = scanner.scanTokens();
 
-		const parser = new Parser(tokens);
+		const parser = new Parser(this, tokens);
 
 		const statements = parser.parseProgram();
 

@@ -12,7 +12,7 @@ class Interpreter {
 	constructor(lox) {
 		this.lox = lox;
 		this.globals = new Environment();
-		this.environment = globals;
+		this.environment = this.globals;
 		this.locals = {};
 
 		this.globals.define("clock", new Callable(0, (interpreter, args) => {
@@ -196,7 +196,7 @@ class Interpreter {
 		const callee = this.evaluate(expr.callee);
 
 		const args = [];
-		for (argument of expr.arguments) {
+		for (argument of expr.args) {
 			args.push(this.evaluate(argument));
 		}
 

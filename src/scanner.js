@@ -25,7 +25,7 @@ class Scanner {
 			this.scanToken();
 		}
 
-		this.tokens.add(new Token(TokenType.EOF, "", null, line));
+		this.tokens.push(new Token(TokenType.EOF, "", null, this.line));
 		return this.tokens;
 	}
 
@@ -141,7 +141,7 @@ class Scanner {
 
 	// peek
 	peek() {
-		if (this.current >= this.source.length()) return "\0";
+		if (this.current >= this.source.length) return "\0";
 		return this.source.charAt(this.current);
 	}
 
@@ -157,7 +157,7 @@ class Scanner {
 	}
 
 	isAlphaNumeric(c) {
-		return isAlpha(c) || isDigit(c);
+		return this.isAlpha(c) || this.isDigit(c);
 	}
 
 	// is-digit
@@ -167,7 +167,7 @@ class Scanner {
 
 	// is-at-end
 	isAtEnd() {
-		return this.current >= this.souce.length();
+		return this.current >= this.source.length;
 	}
 
 	// advance-and-add-token

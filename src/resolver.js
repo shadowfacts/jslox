@@ -138,7 +138,7 @@ class Resolver {
 	visitCallExpr(expr) {
 		this.resolve(expr.callee);
 
-		for (const argument of expr.arguments) {
+		for (const argument of expr.args) {
 			this.resolve(argument);
 		}
 	}

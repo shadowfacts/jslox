@@ -70,7 +70,7 @@ class Environment {
 	toString() {
 		let result = JSON.stringify(this.values);
 		if (this.enclosing != null) {
-			result += " -> " this.enclosing.toString();
+			result += " -> " + this.enclosing.toString();
 		}
 
 		return result;

@@ -32,11 +32,11 @@ class Binary extends Expr {
 Expr.Binary = Binary;
 
 class Call extends Expr {
-	constructor(callee, paren, arguments) {
+	constructor(callee, paren, args) {
 		super();
 		this.callee = callee;
 		this.paren = paren;
-		this.arguments = arguments;
+		this.args = args;
 	}
 
 	accept(visitor) {

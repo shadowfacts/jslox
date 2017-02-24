@@ -12,7 +12,8 @@ const synchronizing = [
 
 class Parser {
 
-	constructor(tokens) {
+	constructor(lox, tokens) {
+		this.lox = lox;
 		this.tokens = tokens;
 		this.currentIndex = 0;
 	}
@@ -381,6 +382,19 @@ class Parser {
 		return false;
 	}
 
+	consume(type, message) {
+		if (this.check(type)) return this.advance();
+		this.error(message);
+
+		if (!synchronizing.includes(type)) return null;
+
+		while (!this.check(type) && !this.isAtEnd()) {
+			this.advance();
+		}
+
+		return this.advance();
+	}
+
 	advance() {
 		if (!this.isAtEnd()) this.currentIndex++;
 		return this.previous();
@@ -392,15 +406,15 @@ class Parser {
 	}
 
 	isAtEnd() {
-		return current().type == TokenType.EOF;
+		return this.current().type == TokenType.EOF;
 	}
 
 	current() {
-		return tokens[currentIndex];
+		return this.tokens[this.currentIndex];
 	}
 
 	previous() {
-		return tokens[currentIndex - 1];
+		return this.tokens[this.currentIndex - 1];
 	}
 
 	error(message) {
