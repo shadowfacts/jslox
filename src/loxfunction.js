@@ -4,6 +4,7 @@ const Return = require("./return");
 class LoxFunction extends Callable {
 
 	constructor(declaration, closure, isInitializer) {
+		super(0, null);
 		this.declaration = declaration;
 		this.closure = closure;
 		this.isInitializer = isInitializer;
@@ -11,8 +12,8 @@ class LoxFunction extends Callable {
 
 	bind(self) {
 		const environment = this.closure.enterScope();
-		environemnt.define("this", self);
-		return new LoxFunction(this.declaration, environemnt, this.isInitializer);
+		environment.define("this", self);
+		return new LoxFunction(this.declaration, environment, this.isInitializer);
 	}
 
 	toString() {
@@ -30,13 +31,15 @@ class LoxFunction extends Callable {
 			const environment = this.closure.enterScope();
 
 			for (let i = 0; i < this.declaration.parameters.length; i++) {
-				environment.define(this.define.parameters[i].lexeme, args[i]);
+				environment.define(this.declaration.parameters[i].lexeme, args[i]);
 			}
 
-			interpreter.executeBody(declaration.body, environment);
+			interpreter.executeBody(this.declaration.body, environment);
 		} catch (e) {
-			if (e instanceof ReturnValue) {
+			if (e instanceof Return) {
 				result = e.value;
+			} else {
+				console.error(e);
 			}
 		}
 
@@ -45,4 +48,4 @@ class LoxFunction extends Callable {
 
 }
 
-module.exports = Callable;
+module.exports = LoxFunction;

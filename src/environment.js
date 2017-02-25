@@ -13,7 +13,7 @@ class Environment {
 
 	declare(name) {
 		if (!this.values.hasOwnProperty(name.lexeme)) {
-			this.vaues[name.lexeme] = null;
+			this.values[name.lexeme] = null;
 		}
 	}
 
@@ -42,7 +42,7 @@ class Environment {
 	}
 
 	define(name, value) {
-		this.values[name.lexeme] = value;
+		this.values[name] = value;
 	}
 
 	getAt(distance, name) {

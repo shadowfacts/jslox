@@ -1,0 +1,9 @@
+fun test(n) {
+	return n + 1;
+}
+
+fun test2(n) {
+	return test(n) + test(2 * n);
+}
+
+print test(3);

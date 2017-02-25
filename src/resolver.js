@@ -29,7 +29,7 @@ class Resolver {
 	}
 
 	resolve(it) {
-		if (it.isExpr || it.isStmt) {
+		if (it instanceof Expr || it instanceof Stmt) {
 			it.accept(this);
 		} else if (Array.isArray(it)) {
 			for (const statement of it) {
@@ -78,12 +78,12 @@ class Resolver {
 	}
 
 	visitExpressionStmt(stmt) {
-		this.resolveExpression(stmt.expression);
+		this.resolve(stmt.expression);
 	}
 
 	visitFunctionStmt(stmt) {
 		this.declare(stmt.name);
-		this.dfeine(stmt.name);
+		this.define(stmt.name);
 
 		this.resolveFunction(stmt, FunctionType.FUNCTION);
 	}
@@ -187,7 +187,7 @@ class Resolver {
 	}
 
 	visitVariableExpr(expr) {
-		if (this.scopes.length > 0 && !this.scopes.peek()[expr.name.lexeme]) {
+		if (this.scopes.length > 0 && this.scopes.peek()[expr.name.lexeme] == false) {
 			this.lox.error(expr.name, "Cannot read local variable in its own intializer.");
 		}
 
@@ -221,7 +221,7 @@ class Resolver {
 		if (this.scopes.length < 1) return;
 
 		const scope = this.scopes.peek();
-		if (scope.contains(name.lexeme)) {
+		if (scope.hasOwnProperty(name.lexeme)) {
 			this.lox.error(name, "Variable with this name already declared in this scope.");
 		}
 
@@ -235,9 +235,9 @@ class Resolver {
 	}
 
 	resolveLocal(expr, name) {
-		for (let i = this.scopes.size() - 1; i >= 0; i--) {
+		for (let i = this.scopes.length - 1; i >= 0; i--) {
 			if (this.scopes[i].hasOwnProperty(name.lexeme)) {
-				this.locals[expr] = this.scopes.size() - 1 - i;
+				this.locals[expr] = this.scopes.length - 1 - i;
 				return;
 			}
 		}

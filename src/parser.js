@@ -134,7 +134,7 @@ class Parser {
 	returnStatement() {
 		const keyword = this.previous();
 		let value = null;
-		if (!this.check(SEMICOLON)) {
+		if (!this.check(TokenType.SEMICOLON)) {
 			value = this.parseExpression();
 		}
 
@@ -180,7 +180,7 @@ class Parser {
 					this.error("Cannot have more than 8 parameters");
 				}
 
-				parameters.add(this.consume(TokenType.IDENTIFIER, "Expect parameter name."));
+				parameters.push(this.consume(TokenType.IDENTIFIER, "Expect parameter name."));
 			} while(this.match(TokenType.COMMA));
 		}
 		this.consume(TokenType.RIGHT_PAREN, "Expect ')' after parameters.");
@@ -312,7 +312,7 @@ class Parser {
 					this.error("Cannot have more than 8 arguments.");
 				}
 
-				args.add(this.parseExpression());
+				args.push(this.parseExpression());
 			} while (this.match(TokenType.COMMA));
 		}
 
@@ -326,7 +326,7 @@ class Parser {
 
 		while (true) {
 			if (this.match(TokenType.LEFT_PAREN)) {
-				expr = this.finishCall();
+				expr = this.finishCall(expr);
 			} else if (this.match(TokenType.DOT)) {
 				const name = this.consume(TokenType.IDENTIFIER, "Expect property name after '.'.");
 				expr = new Expr.Get(expr, name);

@@ -1,6 +1,5 @@
 class Stmt {
 	constructor() {
-		this.isStmt = true;
 	}
 }
 

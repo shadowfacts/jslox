@@ -54,25 +54,28 @@ class Lox {
 		this.interpreter.interpret(statements, locals);
 	}
 
-	error(line, message) {
-		this.report(line, "", message);
-	}
-
 	report(line, where, message) {
 		console.error(`[line ${line}] Error ${where}: ${message}`);
 		this.hadError = true;
 	}
 
 	error(token, message) {
-		if (token.type == TokenType.EOF) {
-			this.report(token.line, " at end", message);
+		if (typeof token == "number") {
+			this.report(token, "", message);
 		} else {
-			this.report(token.line, ` at '${token.lexeme}'`, message)
+			if (token.type == TokenType.EOF) {
+				this.report(token.line, " at end", message);
+			} else {
+				this.report(token.line, ` at '${token.lexeme}'`, message)
+			}
 		}
 	}
 
 	runtimeError(error) {
-		console.error(`${error.getMessage()}\n[line ${error.token.line}]}`);
+		console.error(`${error.message}`);
+		if (error.token) {
+			console.error(`[line ${error.token.line}]`);
+		}
 		this.hadRuntimeError = true;
 	}
 

@@ -1,6 +1,5 @@
 class Expr {
 	constructor() {
-		this.isExpr = true;
 	}
 }
 

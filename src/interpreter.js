@@ -196,7 +196,7 @@ class Interpreter {
 		const callee = this.evaluate(expr.callee);
 
 		const args = [];
-		for (argument of expr.args) {
+		for (const argument of expr.args) {
 			args.push(this.evaluate(argument));
 		}
 
@@ -274,7 +274,7 @@ class Interpreter {
 
 		switch (expr.operator.type) {
 			case TokenType.BANG:
-				return !this.istrue(right);
+				return !this.isTrue(right);
 			case TokenType.MINUS:
 				this.checkNumberOperand(expr.operator, right);
 				return -right;
@@ -286,7 +286,7 @@ class Interpreter {
 	}
 
 	lookUpVariable(name, expr) {
-		const distance = this.locals.get(expr);
+		const distance = this.locals[expr];
 		if (distance != null) {
 			return this.environment.getAt(distance, name.lexeme);
 		} else {
